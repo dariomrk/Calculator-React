@@ -1,58 +1,89 @@
 import React, { ReactNode } from "react";
 import { appstate } from "../../user_types/appstate";
 import { Button } from "../button/button";
+import { evaluate } from "mathjs";
+import { Textbox } from "../textbox/textbox";
 
-export {App};
+export { App };
 
-class App extends React.Component {
+class App extends React.Component<{}, appstate> { // note to self remember to define prop and state types
     constructor(props: {}) {
         super(props);
         this.state = {
-            operand1 : 0,
-            operand2 : 0,
-            operator : "+",
-            result : 0,
-        } as appstate;
+            expression: "",
+            result: "",
+        };
     }
 
-    render() : ReactNode {
+    render(): ReactNode {
         return (
             <React.Fragment>
-                {this.renderButton("1")}
-                {this.renderButton("2")}
-                {this.renderButton("3")}
+                <div id="output_display">
+                    {this.renderTextBox(this.state.expression)}
+                    {this.renderTextBox(this.state.result)}
+                </div>
                 <br/>
-                {this.renderButton("4")}
-                {this.renderButton("5")}
-                {this.renderButton("6")}
-                <br/>
-                {this.renderButton("7")}
-                {this.renderButton("8")}
-                {this.renderButton("9")}
-                <br/>
-                {this.renderButton("+")}
-                {this.renderButton("-")}
-                {this.renderButton("x")}
-                <br/>
-                {this.renderButton("/")}
-                {this.renderButton("%")}
-                {this.renderButton("=")}
+                <div id="keypad">
+                    {this.renderButton("1")}
+                    {this.renderButton("2")}
+                    {this.renderButton("3")}
+                    <br />
+                    {this.renderButton("4")}
+                    {this.renderButton("5")}
+                    {this.renderButton("6")}
+                    <br />
+                    {this.renderButton("7")}
+                    {this.renderButton("8")}
+                    {this.renderButton("9")}
+                    <br />
+                    {this.renderButton("0")}
+                    {this.renderButton("+")}
+                    {this.renderButton("-")}
+                    <br />
+                    {this.renderButton("*")}
+                    {this.renderButton("/")}
+                    {this.renderButton("%")}
+                    <br />
+                    {this.renderButton(".", "buttonDecimalPoint")}
+                    {this.renderButton("=", "buttonEquals")}
+                    {this.renderButton("CLR", "buttonClear")}
+                </div>
             </React.Fragment>
         )
     }
 
-    buttonPressHandler(id : string) : void {
-        // TODO: implement
-        // pass this method as callbackOnClick prop to
-        // <Button> component to handle a button press
-
-        console.log(`Button press detected: ${id}`); // REMOVE: testing purposes only
+    renderButton(displayText: string, componentClass = "keypadButton"): ReactNode {
+        return (
+            <Button displayText={displayText} className={componentClass}
+                callbackOnClick={() => this.buttonPressHandler(displayText)}></Button>
+        )
     }
 
-    renderButton(id: string) : ReactNode {
-        return ( 
-            <Button displayText={id}
-            callbackOnClick={() => this.buttonPressHandler(id)}></Button>
+    renderTextBox(displayText: string) : ReactNode {
+        return (
+            <Textbox displayData={displayText}></Textbox>
         )
+    }
+
+    buttonPressHandler(id: string): void {
+        let e = this.state.expression;
+
+        if (id === "=") {
+            this.calculateExpression();
+            return;
+        }
+
+        if (id === "CLR") {
+            this.setState({ expression: "", result: ""});
+            return;
+        }
+
+        e += id;
+
+        this.setState({ expression: e });
+    }
+
+    calculateExpression(): void {
+        this.setState({ result: evaluate(this.state.expression) as string });
     }
 }

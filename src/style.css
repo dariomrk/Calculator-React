@@ -1,0 +1,50 @@
+#root {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+    border: 1px solid black;
+}
+
+#output {
+    width: 21vw;
+    margin: 1vw;
+    display: inline-block;
+    border: 1px solid black;
+    padding: 0;
+}
+
+.textbox {
+    width: 15vw;
+    height: 7vh;
+    margin: 1vw;
+    background-color: whitesmoke;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    font-size: 2vh;
+    display: inline-block;
+    border: 1px solid black;
+}
+
+#keypad {
+    width: 21vw;
+    margin: 1vw;
+    display: inline-block;
+    border: 1px solid black;
+}
+
+.keypad-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.button {
+    width: 7vw;
+    height: 7vh;
+    font-size: 2vh;
+}

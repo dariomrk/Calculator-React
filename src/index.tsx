@@ -1,5 +1,6 @@
-// imports: components
-import { App } from './components/app/app';
+import { App } from './components/app';
+
+import "./style.css";
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -8,6 +9,6 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
-  <App></App>
+    <App></App>
   </React.StrictMode>
 );

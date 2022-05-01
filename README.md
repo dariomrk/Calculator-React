@@ -15,7 +15,7 @@ A small calculator app made using ReactJS, MathJS and TypeScript.
 | *done* | implement memory function (*ANS*)  | 0.2.0   |
 | *done* | implement clear last entry (*CE*)  | 0.2.0   |
 | *done* | history functionality              | 0.3.0   |
-| *wip*  | refactor code, split App component | 0.4.0   |
-| *wip*  | advanced mode                      | 0.4.0   |
+| *todo* | refactor code, split App component | ?       |
+| *todo* | advanced mode                      | ?       |
 | *todo* | allow input from keyboard          | ?       |
 | *todo* | improve visuals                    | ?       |

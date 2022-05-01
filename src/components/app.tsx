@@ -39,9 +39,6 @@ class App extends React.Component<{}, appstate> {
 
     }
 
-    // TODO: reorder keypad buttons
-    // TODO: create keypad component
-    // TODO: create advanced keypad component
     render(): ReactNode {
         return (
             <React.Fragment>
@@ -177,12 +174,6 @@ class App extends React.Component<{}, appstate> {
         // Append new number/operator to the expression
         expr += id;
 
-        // Expression length limit
-        if (expr.length > 20) {
-            this.setState({ result: "ERROR" })
-            return;
-        }
-
         this.setState({ expression: expr });
     }
 
@@ -210,7 +201,7 @@ class App extends React.Component<{}, appstate> {
         h.push(this.state.expression);
         this.setState({ history: h, historyIndex: h.length });
     }
-
+    
 }
 
 export { App };

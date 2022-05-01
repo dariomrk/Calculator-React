@@ -1,39 +1,41 @@
+/* Desktop */
 #root {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     width: 50%;
     text-align: center;
-    border: 1px solid black;
+    font-size: 3vh;
+    font-family: monospace;
+    font-style: normal;
 }
 
 #output {
-    width: 21vw;
-    margin: 1vw;
-    display: inline-block;
-    border: 1px solid black;
+    width: 75%;
+    height: 20vh;
+    margin: 0;
     padding: 0;
+    display: inline-block;
 }
 
 .textbox {
-    width: 15vw;
-    height: 7vh;
-    margin: 1vw;
+    width: 100%;
+    height: 50%;
+    margin: 0.1% 0;
+    padding: 0;
     background-color: whitesmoke;
-    padding-top: 1vh;
-    padding-bottom: 1vh;
-    padding-left: 1vw;
-    padding-right: 1vw;
-    font-size: 2vh;
-    display: inline-block;
+    font-size: 3vh;
+    display: block;
     border: 1px solid black;
+    overflow-wrap: break-word;
+    overflow-y: scroll;
+    text-align: right;
+    border-radius: 5px;
 }
 
 #keypad {
-    width: 21vw;
+    width: 75%;
     margin: 1vw;
     display: inline-block;
-    border: 1px solid black;
+    margin: 0 0;
 }
 
 .keypad-row {
@@ -44,7 +46,38 @@
 }
 
 .button {
-    width: 7vw;
+    width: 100%;
     height: 7vh;
-    font-size: 2vh;
+    font-size: 3vh;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+
+    #root {
+        margin: 0 auto;
+        width: 100%;
+        text-align: center;
+    }
+
+    #output {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    #keypad {
+        width: 100%;
+        display: inline-block;
+    }
+
+    .keypad-row {
+        display: flexbox;
+    }
+
+    .button {
+        width: 33.3333%;
+        height: 7vh;
+        font-size: 3vh;
+    }
 }

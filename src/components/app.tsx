@@ -6,6 +6,9 @@ import { Textbox } from "./textbox";
 type appstate = {
     expression: string,
     result: string,
+    history: Array<string>,
+    historyIndex: number,
+    advancedMode : boolean,
 }
 
 class App extends React.Component<{}, appstate> {
@@ -14,10 +17,31 @@ class App extends React.Component<{}, appstate> {
         this.state = {
             expression: "",
             result: "",
+            history: [],
+            historyIndex: 0,
+            advancedMode: false,
         };
     }
 
-    // TODO reorder keypad buttons
+    buttons = {
+        plus : "+",
+        minus : "-",
+        mul : "*",
+        div : "/",
+        mod : "%",
+        decimalPoint : ".",
+        eq : "=",
+        clr : "CLR",
+        ce : "CE",
+        ans : "ANS",
+        back : "<",
+        forward : ">",
+
+    }
+
+    // TODO: reorder keypad buttons
+    // TODO: create keypad component
+    // TODO: create advanced keypad component
     render(): ReactNode {
         return (
             <React.Fragment>
@@ -53,11 +77,15 @@ class App extends React.Component<{}, appstate> {
                         {this.renderButton("%")}
                     </div>
                     <div className="keypad-row">
-                        {this.renderButton(".", "button-decimal-point")}
-                        {this.renderButton("=", "button-equals")}
-                        {this.renderButton("CLR", "button-c")}
-                        {this.renderButton("CE", "button-ce")}
-                        {this.renderButton("ANS","button-ans")}
+                        {this.renderButton(".", this.buttons.decimalPoint)}
+                        {this.renderButton("=", this.buttons.eq)}
+                        {this.renderButton("CLR",this.buttons.clr)}
+                        {this.renderButton("CE",this.buttons.ce)}
+                    </div>
+                    <div className="keypad-row">
+                        {this.renderButton("<",this.buttons.back)}
+                        {this.renderButton(">",this.buttons.forward)}
+                        {this.renderButton("ANS",this.buttons.ans)}
                     </div>
                 </div>
             </React.Fragment>
@@ -84,68 +112,105 @@ class App extends React.Component<{}, appstate> {
     }
 
     buttonPressHandler(id: string): void {
-        let e = this.state.expression;
-        
+        let expr = this.state.expression;
+
         // Calculate
         if (id === "=") {
-            this.calculateExpression();
+            if(this.calculateExpression()){
+                this.updateHistory();
+            }
             this.clearExpression();
             return;
         }
 
         // Clear all
-        if (id === "CLR") {
+        if (id === this.buttons.clr) {
             this.setState({ expression: "", result: "" });
             return;
         }
 
         // Clear last entry
-        if (id === "CE") {
-            e = e.slice(0, -1);
-            this.setState({ expression: e });
+        if (id === this.buttons.ce) {
+            expr = expr.slice(0, -1);
+            this.setState({ expression: expr });
             return;
         }
 
         // Input last calculated answer
-        if (id === "ANS") {
+        if (id === this.buttons.ans) {
 
-            if(this.state.result === "ERROR") {
+            if (this.state.result === "ERROR") {
                 return;
             }
 
-            e += this.state.result;
-            this.setState({expression: e})
+            expr += this.state.result;
+            this.setState({ expression: expr })
+            return;
+        }
+
+        // Go back in history
+        if (id === this.buttons.back) {
+            let i = this.state.historyIndex;
+            i--;
+            if (i < 0) {
+                return;
+            }
+            this.clearExpression();
+            const e = this.state.history[i];
+            this.setState({ historyIndex: i, expression: e});
+            return;
+        }
+
+        // Go forward in history
+        if (id === this.buttons.forward) {
+            let i = this.state.historyIndex;
+            i++;
+            if (i > this.state.history.length) {
+                return;
+            }
+            this.clearExpression();
+            const e = this.state.history[i];
+            this.setState({ historyIndex: i, expression: e});
             return;
         }
 
         // Append new number/operator to the expression
-        e += id;
+        expr += id;
 
         // Expression length limit
-        if (e.length > 20) {
+        if (expr.length > 20) {
             this.setState({ result: "ERROR" })
             return;
         }
 
-        this.setState({ expression: e });
+        this.setState({ expression: expr });
     }
 
-    calculateExpression(): void {
+    calculateExpression(): boolean {
         try {
             this.setState({ result: round(evaluate(this.state.expression), 10) as string });
         } catch (e) {
             this.errorHandler(e as Error);
+            return false;
         }
+        return true;
     }
 
-    clearExpression() : void {
-        this.setState({expression: ""});
+    clearExpression(): void {
+        this.setState({ expression: "" });
     }
 
     errorHandler(error: Error) {
         console.warn((error as Error).message);
-        this.setState({ result: "ERROR"})
+        this.setState({ result: "ERROR" })
     }
+
+    updateHistory(): void {
+        let h = this.state.history;
+        h.push(this.state.expression);
+        this.setState({ history: h, historyIndex: h.length });
+    }
+
 }
 
 export { App };

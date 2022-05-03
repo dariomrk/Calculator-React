@@ -1,7 +1,19 @@
 import React, { ReactNode } from "react";
 import { Button } from "./button";
-import { evaluate, round } from "mathjs";
+import {create,all} from "mathjs";
 import { Textbox } from "./textbox";
+
+const math = create(all);
+
+var originalDivide = math.divide;
+math.import({
+  divide: function (a: math.Unit, b: math.Unit) {
+    if (math.isZero(b)) {
+      throw new Error('Divide by zero');
+    }
+    return originalDivide(a, b);
+  }
+}, {override: true})
 
 type appstate = {
     expression: string,
@@ -179,7 +191,7 @@ class App extends React.Component<{}, appstate> {
 
     calculateExpression(): boolean {
         try {
-            this.setState({ result: round(evaluate(this.state.expression), 10) as string });
+            this.setState({ result: math.round(math.evaluate(this.state.expression), 10) as string });
         } catch (e) {
             this.errorHandler(e as Error);
             return false;

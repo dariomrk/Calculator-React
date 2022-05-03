@@ -1,26 +1,26 @@
 import React, { ReactNode } from "react";
 import { Button } from "./button";
-import {create,all} from "mathjs";
+import { create, all } from "mathjs";
 import { Textbox } from "./textbox";
 
 const math = create(all);
 
 var originalDivide = math.divide;
 math.import({
-  divide: function (a: math.Unit, b: math.Unit) {
-    if (math.isZero(b)) {
-      throw new Error('Divide by zero');
+    divide: function (a: math.Unit, b: math.Unit) {
+        if (math.isZero(b)) {
+            throw new Error('Divide by zero');
+        }
+        return originalDivide(a, b);
     }
-    return originalDivide(a, b);
-  }
-}, {override: true})
+}, { override: true })
 
 type appstate = {
     expression: string,
     result: string,
     history: Array<string>,
     historyIndex: number,
-    advancedMode : boolean,
+    advancedMode: boolean,
 }
 
 class App extends React.Component<{}, appstate> {
@@ -36,18 +36,18 @@ class App extends React.Component<{}, appstate> {
     }
 
     buttons = {
-        plus : "+",
-        minus : "-",
-        mul : "*",
-        div : "/",
-        mod : "%",
-        decimalPoint : ".",
-        eq : "=",
-        clr : "CLR",
-        ce : "CE",
-        ans : "ANS",
-        back : "<",
-        forward : ">",
+        plus: "+",
+        minus: "-",
+        mul: "*",
+        div: "/",
+        mod: "%",
+        decimalPoint: ".",
+        eq: "=",
+        clr: "CLR",
+        ce: "CE",
+        ans: "ANS",
+        back: "<",
+        forward: ">",
 
     }
 
@@ -88,13 +88,13 @@ class App extends React.Component<{}, appstate> {
                     <div className="keypad-row">
                         {this.renderButton(".", this.buttons.decimalPoint)}
                         {this.renderButton("=", this.buttons.eq)}
-                        {this.renderButton("CLR",this.buttons.clr)}
-                        {this.renderButton("CE",this.buttons.ce)}
+                        {this.renderButton("CLR", this.buttons.clr)}
+                        {this.renderButton("CE", this.buttons.ce)}
                     </div>
                     <div className="keypad-row">
-                        {this.renderButton("<",this.buttons.back)}
-                        {this.renderButton(">",this.buttons.forward)}
-                        {this.renderButton("ANS",this.buttons.ans)}
+                        {this.renderButton("<", this.buttons.back)}
+                        {this.renderButton(">", this.buttons.forward)}
+                        {this.renderButton("ANS", this.buttons.ans)}
                     </div>
                 </div>
             </React.Fragment>
@@ -125,7 +125,7 @@ class App extends React.Component<{}, appstate> {
 
         // Calculate
         if (id === "=") {
-            if(this.calculateExpression()){
+            if (this.calculateExpression()) {
                 this.updateHistory();
             }
             this.clearExpression();
@@ -152,7 +152,12 @@ class App extends React.Component<{}, appstate> {
                 return;
             }
 
-            expr += this.state.result;
+            if (expr === undefined) {
+                expr = this.state.result;
+            }
+            else {
+                expr += this.state.result;
+            }
             this.setState({ expression: expr })
             return;
         }
@@ -166,7 +171,7 @@ class App extends React.Component<{}, appstate> {
             }
             this.clearExpression();
             const e = this.state.history[i];
-            this.setState({ historyIndex: i, expression: e});
+            this.setState({ historyIndex: i, expression: e });
             return;
         }
 
@@ -179,7 +184,7 @@ class App extends React.Component<{}, appstate> {
             }
             this.clearExpression();
             const e = this.state.history[i];
-            this.setState({ historyIndex: i, expression: e});
+            this.setState({ historyIndex: i, expression: e });
             return;
         }
 
@@ -213,7 +218,7 @@ class App extends React.Component<{}, appstate> {
         h.push(this.state.expression);
         this.setState({ history: h, historyIndex: h.length });
     }
-    
+
 }
 
 export { App };
